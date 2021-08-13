@@ -1,4 +1,5 @@
 import scapy.all as scapy
+import subprocess
 import time
 
 # op: Se envia como ARP res no ARP req al ser 2
