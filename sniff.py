@@ -3,12 +3,24 @@ from scapy.layers import http
 import argparse
 
 parser = argparse.ArgumentParser(description="Sniff URL's and passwords")
-keywords = ["username", "uname", "pass", "password", "email", "user", "usuario", "contrasena"]
+keywords = [
+    "username",
+    "uname",
+    "pass",
+    "password",
+    "email",
+    "user",
+    "usuario",
+    "contrasena",
+]
 
 
 def get_argument():
     parser.add_argument(
-        "-i", "--interface", dest="interface", help="Which interface to listen, example: eth0, wlan0..."
+        "-i",
+        "--interface",
+        dest="interface",
+        help="Which interface to listen, example: eth0, wlan0...",
     )
     arg = parser.parse_args()
     sniff(arg.interface)
